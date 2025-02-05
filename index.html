@@ -13,6 +13,8 @@
             padding: 20px; /* Adjusted padding for mobile */
             overflow: hidden; /* Hide overflow to prevent scrolling issues */
             position: relative; /* Position relative for absolute positioning of hearts */
+            height: 100vh; /* Ensure body takes full viewport height */
+            margin: 0; /* Remove default margin */
         }
         h1, p {
             animation: sway 3s infinite alternate; /* Sway animation */
@@ -52,14 +54,14 @@
         }
         #loveMessage {
             display: none; /* Initially hidden */
-            font-size: 1.5em; /* Adjusted font size for mobile */
+            font-size: 10em; /* Adjusted font size for mobile */
             margin-top: 20px;
             color: #800000; /* Dark red text */
         }
 
         .heart {
-            position: absolute; /* Absolute positioning for hearts */
-            top: 0;
+            position: fixed; /* Fixed positioning for hearts */
+            top: 0; /* Start from the top of the viewport */
             width: 30px;
             height: 30px;
             background-color: red;
@@ -84,26 +86,31 @@
             top: 0;
         }
 
+        /* Distance variable for hearts to fall */
+        :root {
+            --fall-distance: 150px; /* Change this value to adjust the fall distance */
+        }
+
         @keyframes fall {
             0% {
                 transform: translateY(0) rotate(0deg); /* Start position */
             }
             100% {
-                transform: translateY(100vh) rotate(360deg); /* Moves heart off screen while spinning */
+                transform: translateY(calc(100vh - var(--fall-distance))) rotate(360deg); /* Moves heart down to specified distance */
             }
         }
     </style>
 </head>
 <body>
 
-    <h1>Happy Valentine's Day!</h1>
+    <h1>Valentine's Day is coming up</h1>
     <p>I've been thinking about you a lot lately...</p>
-    <button onclick="showProposal()">Click Here to Find Out!</button>
+    <button onclick="showProposal()">press the button</button>
 
     <div id="proposal">
         <img src="hd-black-outline-heart-png-704081694955847yujep9jnxk.jpg" alt="Proposal Image" id="proposalImage" /> <!-- Replace with your image URL -->
         <p>Will you be my Valentine?</p>
-        <button onclick="revealLoveMessage()">Yes</button> <!-- First Yes button -->
+        <button onclick="revealLoveMessage()">Yes</button>
         <button onclick="revealLoveMessage()">Yes</button> <!-- Second Yes button -->
         <div id="loveMessage">I love you!</div> <!-- Hidden message -->
     </div>
@@ -134,7 +141,7 @@
             heart.className = 'heart';
             heart.style.left = Math.random() * 100 + 'vw'; // Random horizontal position
             heart.style.animationDuration = (Math.random() * 2 + 3) + 's'; // Random falling duration
-            heart.style.animationDelay = Math.random() * 5 + 's'; // Random delay for each heart
+            // Removed animation delay for immediate falling
 
             document.body.appendChild(heart);
 
