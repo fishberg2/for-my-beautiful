@@ -11,7 +11,8 @@
             font-family: 'Arial', sans-serif;
             text-align: center;
             padding: 20px; /* Adjusted padding for mobile */
-            overflow: hidden; /* Hide overflow for falling hearts */
+            overflow: hidden; /* Hide overflow to prevent scrolling issues */
+            position: relative; /* Position relative for absolute positioning of hearts */
         }
         h1, p {
             animation: sway 3s infinite alternate; /* Sway animation */
@@ -57,7 +58,7 @@
         }
 
         .heart {
-            position: absolute;
+            position: absolute; /* Absolute positioning for hearts */
             top: 0;
             width: 30px;
             height: 30px;
@@ -108,13 +109,23 @@
     </div>
 
     <script>
-        function showProposal() {
-            document.getElementById("proposal").style.display = "block";
-            document.body.style.overflow = "auto"; // Allow scrolling after proposal is shown
-        }
+        let heartSpawnInterval; // Variable to store the interval for spawning hearts
+        let spawnRate; // Variable to determine the spawn rate
 
-        function revealLoveMessage() {
-            document.getElementById("loveMessage").style.display = "block"; // Show the love message
+        // Function to set spawn rate based on window width
+        function setSpawnRate() {
+            const width = window.innerWidth;
+
+            if (width < 600) {
+                // Mobile devices
+                spawnRate = 1000; // 1 second for mobile
+            } else if (width < 900) {
+                // Small tablets
+                spawnRate = 700; // 0.7 seconds for small tablets
+            } else {
+                // Desktops
+                spawnRate = 500; // 0.5 seconds for desktops
+            }
         }
 
         // Function to create falling and spinning hearts
@@ -133,8 +144,28 @@
             });
         }
 
-        // Create hearts at intervals
-        setInterval(createHeart, 500); // Create a heart every 500ms
+        // Initialize heart spawning based on screen size
+        function startHeartRain() {
+            setSpawnRate(); // Set the initial spawn rate
+            heartSpawnInterval = setInterval(createHeart, spawnRate); // Create hearts at the defined interval
+        }
+
+        // Call functions on load
+        window.onload = startHeartRain;
+        window.onresize = function() {
+            clearInterval(heartSpawnInterval); // Clear existing interval
+            setSpawnRate(); // Reset spawn rate on resize
+            heartSpawnInterval = setInterval(createHeart, spawnRate); // Create hearts at the new interval
+        };
+
+        function showProposal() {
+            document.getElementById("proposal").style.display = "block";
+            document.body.style.overflow = "auto"; // Allow scrolling after proposal is shown
+        }
+
+        function revealLoveMessage() {
+            document.getElementById("loveMessage").style.display = "block"; // Show the love message
+        }
     </script>
 
 </body>
